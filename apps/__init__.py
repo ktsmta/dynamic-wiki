@@ -1,7 +1,10 @@
 from flask import Flask
-from apps.routes.main import main_bp
 
 def create_app():
     app = Flask(__name__)
-    app.register_blueprint(main_bp)
+
+    from apps.core import core_bp
+
+    app.register_blueprint(core_bp)
+
     return app
