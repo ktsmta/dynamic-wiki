@@ -4,4 +4,4 @@ from apps.core import core_bp
 
 @core_bp.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("core/index.html")
