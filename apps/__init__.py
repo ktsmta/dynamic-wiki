@@ -12,9 +12,7 @@ def create_app():
     db.init_app(app)
 
     from apps.core import core_bp
-    from apps.admin import admin_bp
 
-    app.register_blueprint(core_bp)
-    app.register_blueprint(admin_bp, url_prefix="/admin")
+    app.register_blueprint(core_bp, url_prefix="/")
 
     return app
