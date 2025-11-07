@@ -2,6 +2,9 @@ import uuid
 from datetime import datetime, timezone
 from apps import db
 
+from sqlalchemy.orm import validates
+import re
+
 class Category(db.Model):
     __tablename__ = "categories"
 
@@ -48,6 +51,14 @@ class Category(db.Model):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+
+
+
+    @validates('slug')
+    def validate_slug(self, key, slug):
+        if not re.match(r"^[a-zA-Z0-9-]+$", slug):
+            raise ValueError('slug には半角英数字とハイフンのみ使用できます。')
+        return slug
 
 
 
