@@ -66,7 +66,7 @@ class Category(db.Model):
     parent = db.relationship(
         'Category',
         back_populates='children',
-        emote_side=[id],
+        remote_side=[id],
     )
 
     # 子参照リレーション
