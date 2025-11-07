@@ -7,6 +7,8 @@
 {% block content %}
 <h2>core</h2>
 <ul>
-    <li><a href="{{ url_for('core.index') }}">ホーム</a></li>   
+    <li><a href="{{ url_for('core.index') }}">ホーム</a></li>
+    <li><a href="{{ url_for('core.robots_txt') }}">robots.txt</a></li>
+    <li><a href="{{ url_for('core.llms_txt') }}">llms.txt</a></li>
 </ul>
 {% endblock %}
