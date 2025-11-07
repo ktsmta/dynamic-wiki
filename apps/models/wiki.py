@@ -23,8 +23,10 @@ class Wiki(db.Model):
     )
 
 
-    # Categoriesテーブルとのリレーション
-    category = db.relationship("Category", back_populates="wiki")
 
-    def __repr__(self):
-        return f"<Wiki of Category: {self.category.name}>"
+    # Categoriesテーブルとのリレーション
+    category = db.relationship(
+        "Category",
+        back_populates="wiki",
+        uselist=False,
+    )
