@@ -8,22 +8,31 @@ DYNAMIC-WIKI/
 │   │   ├── static/
 │   │   │   ├── css/
 │   │   │   │   └── style.css
-│   │   │   ├── img/
-│   │   │   └── js/
+│   │   │   └── meta/
+│   │   │       ├── llms.txt
+│   │   │       └── robots.txt
 │   │   │
 │   │   ├── templates/
 │   │   │   └── core/
-│   │   │       ├── bases/
-│   │   │       │   └── base.html
+│   │   │       ├── base.html
 │   │   │       └── index.html
 │   │   │
 │   │   └── __init__.py
+│   │
+│   ├── models/
+│   │   ├── __init__.py
+│   │   ├── category.py
+│   │   ├── thread.py
+│   │   ├── post.py
+│   │   └── wiki.py
 │   │
 │   ├── __init__.py
 │   └── app.py
 │
 ├── instance/
 │   └── local.db
+│
+├── migrations/
 │
 ├── venv/
 │
