@@ -7,3 +7,5 @@ core_bp = Blueprint(
     static_folder='static',
     static_url_path='/core/static',
 )
+
+from apps.core.routes import main
