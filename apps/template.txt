@@ -1,9 +1,7 @@
 {% extends 'core/base.html' %}
 
 {% block title %}
-ホーム
 {% endblock %}
 
 {% block content %}
-<h1>ようこそindex.htmlへ</h1>
 {% endblock %}
