@@ -54,11 +54,17 @@ class Category(db.Model):
 
 
 
+    # slug制約
     @validates('slug')
     def validate_slug(self, key, slug):
         if not re.match(r"^[a-zA-Z0-9-]+$", slug):
             raise ValueError('slug には半角英数字とハイフンのみ使用できます。')
         return slug
+    
+
+    # 識別の為
+    def __repr__(self):
+        return self.slug
 
 
 
