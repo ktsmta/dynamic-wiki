@@ -34,7 +34,9 @@ def create_app():
     app.register_blueprint(core_bp, url_prefix="/")
 
     # admin
-    from apps.admin import admin_bp
+    from apps.admin import admin_bp, init_admin
     app.register_blueprint(admin_bp, url_prefix='/admin')
+
+    init_admin(app)
 
     return app

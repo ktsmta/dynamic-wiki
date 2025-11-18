@@ -10,17 +10,13 @@
     </head>
     <body>
         <h1>サイトマップ</h1>
-        <h1>core</h1>
         <ul>
             <li><a href="{{ url_for('core.index') }}">ホーム</a></li>
             <li><a href="{{ url_for('core.robots_txt') }}">クローラー対策</a></li>
             <li><a href="{{ url_for('core.llms_txt') }}">AI対策</a></li>
+            <li><a href="{{ url_for('admin.index') }}">管理者ダッシュボード</a></li>
         </ul>
-        <h1>admin</h1>
-        <ul>
-            <li><a href="{{ url_for('admin.dashboard') }}">管理者ダッシュボード</a></li>
-            <li><a href="{{ url_for('admin.categories') }}">カテゴリテーブル管理</a></li>
-        </ul>
+        <br>
         <hr>
         <br>
         {% block content %}
