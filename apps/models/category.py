@@ -1,8 +1,11 @@
 import uuid
 from datetime import datetime, timezone
+
+from apps.models.wiki import Wiki
 from apps import db
 
-from sqlalchemy.orm import validates
+from sqlalchemy import event
+from sqlalchemy.orm import validates, Session
 import re
 
 class Category(db.Model):
@@ -61,12 +64,9 @@ class Category(db.Model):
             raise ValueError('slug には半角英数字とハイフンのみ使用できます。')
         return slug
     
-
     # 識別の為
     def __repr__(self):
         return self.slug
-
-
 
     # 親参照リレーション
     parent = db.relationship(
@@ -93,3 +93,23 @@ class Category(db.Model):
         "Thread",
         back_populates="category",
     )
+
+
+@event.listens_for(Category, "after_insert")
+def create_wiki_for_category(mapper, connection, target):
+    """
+    Category が新規作成された際に、対応する Wiki レコードを1件自動生成する。
+    """
+
+    # SQLAlchemy ORM セッションを生成（connection に紐づくセッション）
+    session = Session(bind=connection)
+
+    # Wiki を生成（content は nullable=True のため空で可）
+    new_wiki = Wiki(
+        category_id=target.id,
+        content="",   # 初期本文は空。将来的にAI等で更新可能。
+    )
+
+    # セッションに追加してコミット
+    session.add(new_wiki)
+    session.commit()

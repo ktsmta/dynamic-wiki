@@ -12,7 +12,14 @@ class Wiki(db.Model):
     category_id = db.Column(db.String(36), db.ForeignKey("categories.id"), unique=True, nullable=False)
 
     # Wiki本文（まとめ・要約）
-    content = db.Column(db.Text, nullable=False)
+    content = db.Column(db.Text, nullable=True)
+
+    # 作成日時
+    created_at = db.Column(
+        db.DateTime,
+        default=lambda: datetime.now(timezone.utc),
+        nullable=False,
+    )
 
     # 更新日時
     updated_at = db.Column(

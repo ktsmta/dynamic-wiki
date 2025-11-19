@@ -1,0 +1,15 @@
+・カテゴリ以外のテーブルにもテストデータ挿入
+
+・以下の内容をcategory.pyのクラスの外一番下に挿入
+@event.listens_for(Category, "after_insert")
+def create_wiki_for_category(mapper, connection, target):
+    # target は作成された Category レコード
+    connection.execute(
+        Wiki.__table__.insert().values(
+            category_id=target.id,
+            title=target.name,   # デフォルトでカテゴリ名をタイトルにする例
+            content=""           # 初期内容は空
+        )
+    )
+
+・動的にページ生成する仕組み
