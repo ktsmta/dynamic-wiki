@@ -3,23 +3,20 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="{{ url_for('core.static', filename='css/style.css') }}">
-        <title>
-            {% block title %}
-            {% endblock %}
-        </title>
+        <title>DYNAMICWIKI</title>
     </head>
     <body>
-        <h1>サイトマップ</h1>
-        <ul>
-            <li><a href="{{ url_for('core.index') }}">ホーム</a></li>
-            <li><a href="{{ url_for('core.robots_txt') }}">クローラー対策</a></li>
-            <li><a href="{{ url_for('core.llms_txt') }}">AI対策</a></li>
-            <li><a href="{{ url_for('admin.index') }}">管理者ダッシュボード</a></li>
-        </ul>
-        <br>
-        <hr>
-        <br>
+        <!-- ヘッダー -->
+        <a href="{{ url_for('core.index') }}"><h1>DYNAMICWIKI</h1></a>
+        <a href="{{ url_for('admin.index') }}"><h2>ADMIN</h2></a>
+        <br><hr><br>
+
+        <!-- メインコンテンツ -->
         {% block content %}
         {% endblock %}
+
+        <!-- フッター -->
+        <br><hr><br>
+        <h3>&copy; 2025 DYNAMICWIKI</h3>
     </body>
 </html>

@@ -72,4 +72,9 @@ small {
 
 ul {
     font-size: 2rem;
+    list-style: none;
+}
+
+li {
+    list-style: none;
 }

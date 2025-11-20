@@ -1,9 +1,14 @@
 {% extends 'core/base.html' %}
 
-{% block title %}
-ホーム
-{% endblock %}
-
 {% block content %}
-<h1>ようこそindex.htmlへ</h1>
+
+<h1>All categories</h1>
+<ul>
+{% for c in categories %}
+    <li>
+      {{ c.name }}
+    </li>
+  {% endfor %}
+</ul>
+
 {% endblock %}
