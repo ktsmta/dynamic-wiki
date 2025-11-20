@@ -3,12 +3,14 @@
 {% block content %}
 
 <h1>All categories</h1>
-<ul>
-{% for c in categories %}
-    <li>
-      {{ c.name }}
-    </li>
-  {% endfor %}
-</ul>
+    <ul>
+      {% for c in categories %}
+        <li>
+            <a href="{{ url_for('categories.category_top', slug=c.slug) }}">
+            {{ c.name }}
+            </a>
+        </li>
+      {% endfor %}
+    </ul>
 
 {% endblock %}
