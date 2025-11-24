@@ -1,0 +1,28 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h1>{{ category.name }}のカテゴリです！</h1>
+<h1><br></h1>
+
+{% if children %}
+    <h3>{{ category.name }}の子供カテゴリ一覧</h3>
+    <ul>
+        {% for child in children %}
+            <li>
+                <a href="{{ url_for('forums.category', slug=child.slug) }}">
+                    {{ child.name }}
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+    <h1><br></h1>
+    {% else %}
+{% endif %}
+
+<h3>すべてのスレッド</h3>
+<a href="{{ url_for('forums.thread_new', slug=category.slug) }}"><button>スレッドを新規作成</button></a>
+<h1><br></h1>
+
+<h3>DYNAMICWIKI</h3>
+
+{% endblock %}

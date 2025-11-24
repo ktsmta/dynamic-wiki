@@ -1,0 +1,17 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h1>{{ category.name }} - 新しいスレッドを作成</h1>
+
+<form method="POST">
+
+  <label>タイトル</label><br>
+  <input type="text" name="title" required><br><br>
+
+  <label>本文</label><br>
+  <textarea name="content" rows="10" required></textarea><br><br>
+
+  <button type="submit">作成する</button>
+</form>
+
+{% endblock %}

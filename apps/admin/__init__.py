@@ -16,7 +16,7 @@ admin_bp = Blueprint(
 )
 
 def init_admin(app):
-    admin = Admin(app, name="Dynamic Wiki 管理者専用")
+    admin = Admin(app)
 
     admin.add_view(CategoryAdmin(Category, db.session))
     admin.add_view(ModelView(Thread, db.session))

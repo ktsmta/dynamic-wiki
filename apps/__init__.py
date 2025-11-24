@@ -37,9 +37,9 @@ def create_app():
     from apps.admin import admin_bp, init_admin
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
-    # categories
-    from apps.categories import categories_bp
-    app.register_blueprint(categories_bp, url_prefix='/category')
+    # forums
+    from apps.forums import forums_bp
+    app.register_blueprint(forums_bp, url_prefix='/forums')
 
     init_admin(app)
 

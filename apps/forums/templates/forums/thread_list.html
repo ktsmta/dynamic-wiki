@@ -1,0 +1,29 @@
+{% extends "core/base.html" %}
+
+{% block content %}
+<h1>{{ category.name }} のスレッド一覧</h1>
+
+<a href="{{ url_for('forums.create_thread', slug=category.slug) }}">
+  <button>新しいスレッドを作成</button>
+</a>
+
+<hr>
+
+{% if threads %}
+  <ul>
+    {% for t in threads %}
+      <li>
+        <a href="{{ url_for('forums.thread_detail', slug=category.slug, thread_id=t.id) }}">
+          {{ t.title }}
+        </a>
+        <span style="color: gray; font-size: 0.9em;">
+          （{{ t.created_at.strftime('%Y-%m-%d %H:%M') }}）
+        </span>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>まだスレッドはありません。</p>
+{% endif %}
+
+{% endblock %}
