@@ -13,6 +13,7 @@ from apps.admin.category_view import CategoryAdmin
 admin_bp = Blueprint(
     "admin_bp",
     __name__,
+    template_folder='templates',
 )
 
 def init_admin(app):

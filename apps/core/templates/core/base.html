@@ -2,21 +2,18 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="{{ url_for('core.static', filename='css/style.css') }}">
+        <!-- <link rel="stylesheet" href="{{ url_for('core.static', filename='css/style.css') }}"> -->
         <title>DYNAMICWIKI</title>
     </head>
     <body>
         <!-- ヘッダー -->
         <a href="{{ url_for('core.index') }}"><h1>DYNAMICWIKI</h1></a>
-        <a href="{{ url_for('admin.index') }}"><h2>ADMIN</h2></a>
+        <!-- <a href="{{ url_for('admin.index') }}"><p>管理者専用</p></a> -->
+        <p><i>こんにちは</i></p>
         <br><hr><br>
 
         <!-- メインコンテンツ -->
         {% block content %}
         {% endblock %}
-
-        <!-- フッター -->
-        <br><hr><br>
-        <h3>&copy; 2025 DYNAMICWIKI</h3>
     </body>
 </html>

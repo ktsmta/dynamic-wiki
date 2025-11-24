@@ -86,12 +86,16 @@ class Category(db.Model):
         "Wiki",
         back_populates="category",
         uselist=False,
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
 
     # threadsテーブルとのリレーション
     threads = db.relationship(
         "Thread",
         back_populates="category",
+        cascade="all, delete-orphan",
+        passive_deletes=True,
     )
 
 
