@@ -1,17 +1,104 @@
-{% extends "core/base.html" %}
+{% extends 'base/.html' %}
 
 {% block content %}
-<h1>{{ category.name }} - 新しいスレッドを作成</h1>
+<div class="p-6 md:p-10">
+  <div class="mx-auto max-w-3xl">
 
-<form method="POST">
+    <!-- Header / Breadcrumb -->
+    <div class="flex flex-col gap-6">
+      <p class="text-sm text-gray-500">
+        <a href="{{ url_for('core.index') }}" class="underline underline-offset-4 hover:text-gray-700">ホーム</a>
+        <span class="mx-2 text-gray-300">/</span>
+        <a href="{{ url_for('forums.category', slug=category.slug) }}" class="underline underline-offset-4 hover:text-gray-700">
+          {{ category.name }}
+        </a>
+        <span class="mx-2 text-gray-300">/</span>
+        <span class="text-gray-700">新しいスレッド</span>
+      </p>
 
-  <label>タイトル</label><br>
-  <input type="text" name="title" required><br><br>
+      <div class="flex flex-col gap-2">
+        <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900">
+          新しいスレッドを作成
+        </h1>
+        <p class="text-gray-600">
+          カテゴリ：<span class="font-medium text-gray-900">{{ category.name }}</span>
+        </p>
+      </div>
 
-  <label>本文</label><br>
-  <textarea name="content" rows="10" required></textarea><br><br>
+      <div class="border-t border-gray-200"></div>
+    </div>
 
-  <button type="submit">作成する</button>
-</form>
+    <!-- Form Card -->
+    <div class="mt-8 rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+      <div class="px-5 py-4 border-b border-gray-200 bg-gray-50">
+        <p class="text-base font-semibold text-gray-900">スレッド情報</p>
+        <p class="mt-1 text-sm text-gray-600">タイトルと本文（最初の投稿）を入力してください。</p>
+      </div>
 
+      <div class="p-5">
+        <form method="POST" action="{{ url_for('forums.thread_new', slug=category.slug) }}" class="space-y-5">
+          <!-- CSRF（Flask-WTF CSRFProtect 対応） -->
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+          <div>
+            <label for="title" class="block text-sm font-semibold text-gray-900">タイトル</label>
+            <input
+              id="title"
+              name="title"
+              type="text"
+              required
+              maxlength="200"
+              placeholder="例）ZTAポリシーの適用範囲について"
+              class="mt-2 w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-400"
+            >
+            <p class="mt-2 text-xs text-gray-500">※短く要点が分かるタイトルがおすすめです。</p>
+          </div>
+
+          <div>
+            <label for="content" class="block text-sm font-semibold text-gray-900">本文（最初の投稿）</label>
+            <textarea
+              id="content"
+              name="content"
+              rows="8"
+              required
+              placeholder="背景、前提条件、聞きたいこと、試したこと、などを書いてください。"
+              class="mt-2 w-full rounded-2xl border border-gray-300 bg-white px-4 py-3 text-gray-900 shadow-sm focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-400"
+            ></textarea>
+            <p class="mt-2 text-xs text-gray-500">※改行はそのまま表示されます。</p>
+          </div>
+
+          <div class="pt-2">
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                type="submit"
+                class="inline-flex items-center justify-center rounded-xl bg-gray-900 px-6 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:scale-[0.99] transition w-full sm:w-auto"
+              >
+                作成して投稿
+              </button>
+
+              <a
+                href="{{ url_for('forums.thread_list', slug=category.slug) }}"
+                class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition w-full sm:w-auto"
+              >
+                一覧へ戻る
+              </a>
+
+              <a
+                href="{{ url_for('forums.category', slug=category.slug) }}"
+                class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition w-full sm:w-auto"
+              >
+                カテゴリへ戻る
+              </a>
+            </div>
+
+            <p class="mt-4 text-center text-xs text-gray-500">
+              ※作成すると「最初の投稿」が同時に作成されます。
+            </p>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+</div>
 {% endblock %}

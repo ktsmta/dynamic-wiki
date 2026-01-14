@@ -1,29 +1,134 @@
-{% extends "core/base.html" %}
+{% extends 'base/.html' %}
 
 {% block content %}
-<h1>{{ category.name }} のスレッド一覧</h1>
+<div class="p-6 md:p-10">
+  <div class="mx-auto max-w-5xl">
+    <!-- Header -->
+    <div class="flex flex-col gap-6">
+      <div class="flex flex-col gap-2">
+        <p class="text-sm text-gray-500">
+          <a href="{{ url_for('core.index') }}" class="underline underline-offset-4 hover:text-gray-700">ホーム</a>
+          <span class="mx-2 text-gray-300">/</span>
+          <a href="{{ url_for('forums.category', slug=category.slug) }}" class="underline underline-offset-4 hover:text-gray-700">{{ category.name }}</a>
+          <span class="mx-2 text-gray-300">/</span>
+          <span class="text-gray-700">すべてのスレッド</span>
+        </p>
 
-<a href="{{ url_for('forums.create_thread', slug=category.slug) }}">
-  <button>新しいスレッドを作成</button>
-</a>
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <h1 class="text-3xl md:text-4xl font-semibold tracking-tight text-gray-900">
+              すべてのスレッド
+            </h1>
+            <p class="mt-1 text-gray-600">
+              カテゴリ：<span class="font-medium text-gray-900">{{ category.name }}</span>
+            </p>
+          </div>
 
-<hr>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a
+              href="{{ url_for('forums.category', slug=category.slug) }}"
+              class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition"
+            >
+              カテゴリへ戻る
+            </a>
+            <a
+              href="{{ url_for('forums.thread_new', slug=category.slug) }}"
+              class="inline-flex items-center justify-center rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:scale-[0.99] transition"
+            >
+              新しいスレッドを作成
+            </a>
+          </div>
+        </div>
+      </div>
 
-{% if threads %}
-  <ul>
-    {% for t in threads %}
-      <li>
-        <a href="{{ url_for('forums.thread_detail', slug=category.slug, thread_id=t.id) }}">
-          {{ t.title }}
-        </a>
-        <span style="color: gray; font-size: 0.9em;">
-          （{{ t.created_at.strftime('%Y-%m-%d %H:%M') }}）
-        </span>
-      </li>
-    {% endfor %}
-  </ul>
-{% else %}
-  <p>まだスレッドはありません。</p>
-{% endif %}
+      <div class="border-t border-gray-200"></div>
+    </div>
 
+    <!-- Thread list -->
+    <div class="mt-8">
+      {% if threads %}
+        <div class="rounded-2xl border border-gray-200 bg-white shadow-sm overflow-hidden">
+          <div class="px-5 py-4 border-b border-gray-200 bg-gray-50">
+            <p class="text-sm text-gray-600">
+              全 <span class="font-semibold text-gray-900">{{ threads|length }}</span> 件
+            </p>
+          </div>
+
+          <ul class="divide-y divide-gray-200">
+            {% for thread in threads %}
+              <li class="group px-5 py-4 hover:bg-gray-50 transition">
+                <div class="flex items-start justify-between gap-4">
+                  <div class="min-w-0">
+                    <a
+                      href="{{ url_for('forums.thread_detail', slug=category.slug, thread_id=thread.id) }}"
+                      class="block text-base md:text-lg font-semibold text-gray-900 underline-offset-4 group-hover:underline"
+                    >
+                      <span class="block truncate">{{ thread.title }}</span>
+                    </a>
+
+                    <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500">
+                      <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700">
+                        /{{ category.slug }}
+                      </span>
+                      <span>
+                        作成：{{ thread.created_at.strftime('%Y-%m-%d %H:%M') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="shrink-0">
+                    <a
+                      href="{{ url_for('forums.thread_detail', slug=category.slug, thread_id=thread.id) }}"
+                      class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition"
+                    >
+                      開く
+                    </a>
+                  </div>
+                </div>
+              </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Bottom actions -->
+        <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+          <a
+            href="{{ url_for('forums.category', slug=category.slug) }}"
+            class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition"
+          >
+            カテゴリへ戻る
+          </a>
+          <a
+            href="{{ url_for('forums.thread_new', slug=category.slug) }}"
+            class="inline-flex items-center justify-center rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:scale-[0.99] transition"
+          >
+            新しいスレッドを作成
+          </a>
+        </div>
+      {% else %}
+        <div class="rounded-2xl border border-gray-200 bg-white p-8 shadow-sm">
+          <h2 class="text-lg font-semibold text-gray-900">まだスレッドがありません</h2>
+          <p class="mt-2 text-gray-600">
+            まずは最初のスレッドを作成してみましょう。
+          </p>
+
+          <div class="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a
+              href="{{ url_for('forums.category', slug=category.slug) }}"
+              class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition"
+            >
+              カテゴリへ戻る
+            </a>
+            <a
+              href="{{ url_for('forums.thread_new', slug=category.slug) }}"
+              class="inline-flex items-center justify-center rounded-xl bg-gray-900 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:scale-[0.99] transition"
+            >
+              新しいスレッドを作成
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

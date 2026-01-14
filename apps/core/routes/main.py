@@ -5,8 +5,7 @@ from apps.models.category import Category
 
 @core_bp.route("/")
 def index():
-    categories = Category.query.filter_by(parent_id=None).all()
-    return render_template("core/index.html", categories=categories)
+    return render_template("core/index.html")
 
 @core_bp.route("/robots.txt")
 def robots_txt():

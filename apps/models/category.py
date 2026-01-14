@@ -102,7 +102,7 @@ class Category(db.Model):
 @event.listens_for(Category, "after_insert")
 def create_wiki_for_category(mapper, connection, target):
     """
-    Category が新規作成された際に、対応する Wiki レコードを1件自動生成する。
+    Category が新規作成された際に、対応するWikiレコードを1件自動生成する。
     """
 
     # SQLAlchemy ORM セッションを生成（connection に紐づくセッション）
