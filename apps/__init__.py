@@ -31,15 +31,15 @@ def create_app():
     # Blueprint登録
     # core
     from apps.core import core_bp
-    app.register_blueprint(core_bp, url_prefix="/")
+    app.register_blueprint(core_bp, url_prefix='/')
 
     # admin
     from apps.admin import admin_bp, init_admin
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
-    # forums
-    from apps.forums import forums_bp
-    app.register_blueprint(forums_bp, url_prefix='/forums')
+    # main
+    from apps.main import main_bp
+    app.register_blueprint(main_bp, url_prefix='/cats')
 
     init_admin(app)
 

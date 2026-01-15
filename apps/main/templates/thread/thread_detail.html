@@ -9,7 +9,7 @@
       <p class="text-sm text-gray-500">
         <a href="{{ url_for('core.index') }}" class="underline underline-offset-4 hover:text-gray-700">ホーム</a>
         <span class="mx-2 text-gray-300">/</span>
-        <a href="{{ url_for('forums.category', slug=thread.category.slug) }}" class="underline underline-offset-4 hover:text-gray-700">
+        <a href="{{ url_for('main.category_detail', slug=thread.category.slug) }}" class="underline underline-offset-4 hover:text-gray-700">
           {{ thread.category.name }}
         </a>
         <span class="mx-2 text-gray-300">/</span>
@@ -25,19 +25,28 @@
             <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-700">
               /{{ thread.category.slug }}
             </span>
+            {% if thread.thread_type == "question" %}
+              <span class="inline-flex items-center rounded-full bg-blue-50 px-2.5 py-1 text-xs font-medium text-blue-700">
+                質問
+              </span>
+            {% elif thread.thread_type == "discussion" %}
+              <span class="inline-flex items-center rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-700">
+                議論
+              </span>
+            {% endif %}
             <span>作成：{{ thread.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
           </div>
         </div>
 
         <div class="flex flex-col sm:flex-row gap-3">
           <a
-            href="{{ url_for('forums.thread_list', slug=thread.category.slug) }}"
+            href="{{ url_for('main.thread_all', slug=thread.category.slug) }}"
             class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition"
           >
             一覧へ戻る
           </a>
           <a
-            href="{{ url_for('forums.thread_new', slug=thread.category.slug) }}"
+            href="{{ url_for('main.thread_new', slug=thread.category.slug) }}"
             class="inline-flex items-center justify-center rounded-xl bg-gray-900 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-gray-800 active:scale-[0.99] transition"
           >
             新しいスレッドを作成
@@ -171,7 +180,7 @@
           <!-- 同じURLへPOST（post_new不要） -->
           <form
             method="POST"
-            action="{{ url_for('forums.thread_detail', slug=thread.category.slug, thread_id=thread.id) }}"
+            action="{{ url_for('main.thread_detail', slug=thread.category.slug, thread_id=thread.id) }}"
             class="space-y-4"
           >
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
@@ -200,7 +209,7 @@
                 投稿する
               </button>
               <a
-                href="{{ url_for('forums.thread_list', slug=thread.category.slug) }}"
+                href="{{ url_for('main.thread_all', slug=thread.category.slug) }}"
                 class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition w-full sm:w-auto"
               >
                 一覧へ戻る

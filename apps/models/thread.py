@@ -9,14 +9,8 @@ class Thread(db.Model):
     id = db.Column(
         db.String(36),
         primary_key=True,
+        nullable=False,
         default=lambda: str(uuid.uuid4()),
-        nullable=False,
-    )
-
-    # タイトル
-    title = db.Column(
-        db.String(100),
-        nullable=False,
     )
 
     # カテゴリID (外部キー)
@@ -26,19 +20,38 @@ class Thread(db.Model):
         nullable=False,
     )
 
+    # タイトル
+    title = db.Column(
+        db.String(100),
+        nullable=False,
+    )
+
+    # スレッド種別 (質問/議論)
+    thread_type = db.Column(
+        db.String(100),
+        nullable=True,
+    )
+
+    # post数
+    post_count = db.Column(
+        db.Integer,
+        nullable=False,
+        default=0,
+    )
+
     # 作成日時
     created_at = db.Column(
         db.DateTime,
-        default=lambda: datetime.now(timezone.utc),
         nullable=False,
+        default=lambda: datetime.now(timezone.utc),
     )
 
     # 更新日時
     updated_at = db.Column(
         db.DateTime,
+        nullable=False,
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
-        nullable=False,
     )
 
 

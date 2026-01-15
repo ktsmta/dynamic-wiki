@@ -1,7 +1,7 @@
 from flask import render_template
 from apps.core import core_bp
 
-from apps.models.category import Category
+from apps.models.category import *
 
 @core_bp.route("/")
 def index():

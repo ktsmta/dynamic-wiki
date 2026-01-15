@@ -1,41 +1,11 @@
-from flask import render_template,request, redirect, url_for, abort
-from apps.forums import forums_bp
+from flask import render_template, request,redirect, url_for, abort
+from apps.main import main_bp
 from apps.models import *
 from apps import db
 
-# top
-@forums_bp.route("/")
-def top():
-    categories = Category.query.filter(Category.parent_id.is_(None)).all()
-    return render_template("forums/top.html", categories=categories)
-
-#
-@forums_bp.route("/<slug>")
-def category(slug):
-    category = Category.query.filter_by(slug=slug).first_or_404()
-    parent = category.parent
-    children = category.children
-    latest_threads = (
-        Thread.query
-        .filter_by(category_id=category.id)
-        .order_by(Thread.created_at.desc())
-        .limit(5)
-        .all()
-    )
-    wiki = category.wiki
-
-    return render_template(
-        "forums/category.html",
-        category=category,
-        parent=parent,
-        children=children,
-        latest_threads=latest_threads,
-        wiki=wiki,
-    )
-
-# カテゴリ内スレッド一覧
-@forums_bp.route("/<slug>/threads")
-def thread_list(slug):
+# スレッド一覧
+@main_bp.route("/<slug>/threads")
+def thread_all(slug):
     category = Category.query.filter_by(slug=slug).first_or_404()
     threads = (
         Thread.query.filter_by(category_id=category.id)
@@ -44,13 +14,13 @@ def thread_list(slug):
     )
 
     return render_template(
-        "forums/thread_list.html",
+        "thread/thread_all.html",
         category=category,
         threads=threads
     )
 
 # スレッド詳細
-@forums_bp.route("/<slug>/threads/<thread_id>", methods=["GET", "POST"])
+@main_bp.route("/<slug>/threads/<thread_id>", methods=["GET", "POST"])
 def thread_detail(slug, thread_id):
     thread = Thread.query.get_or_404(thread_id)
 
@@ -65,7 +35,7 @@ def thread_detail(slug, thread_id):
 
         # 空投稿ガード（最低限）
         if not content:
-            return redirect(url_for("forums.thread_detail", slug=slug, thread_id=thread.id))
+            return redirect(url_for("main.thread_detail", slug=slug, thread_id=thread.id))
 
         post = Post(
             thread_id=thread.id,
@@ -75,8 +45,8 @@ def thread_detail(slug, thread_id):
         db.session.add(post)
         db.session.commit()
 
-        return redirect(url_for("forums.thread_detail", slug=slug, thread_id=thread.id))
-
+        return redirect(url_for("main.thread_detail", slug=slug, thread_id=thread.id))
+    
     # 表示用：時系列で取得（昇順）
     posts = (
         Post.query
@@ -86,27 +56,36 @@ def thread_detail(slug, thread_id):
     )
 
     return render_template(
-        "forums/thread_detail.html",
+        "thread/thread_detail.html",
         thread=thread,
         posts=posts,
     )
 
 # スレッド新規作成
-@forums_bp.route('/<slug>/threads/new', methods=["GET", "POST"])
+@main_bp.route('/<slug>/threads/new', methods=["GET", "POST"])
 def thread_new(slug):
     category = Category.query.filter_by(slug=slug).first_or_404()
 
     if request.method == "POST":
         title = (request.form.get("title") or "").strip()
         content = (request.form.get("content") or "").strip()
+        thread_type = (request.form.get("thread_type") or "question").strip()
+
+        allowed_types = {"question", "discussion"}
+        if thread_type not in allowed_types:
+            thread_type = "question"  # MVPは強制でOK（厳密に弾くなら abort(400) など）
 
         # 最低限のバリデーション
         if not title or not content:
-            return render_template("forums/thread_new.html", category=category)
+            return render_template("thread/thread_new.html", category=category)
 
-        thread = Thread(title=title, category_id=category.id)
+        thread = Thread(
+            title=title,
+            category_id=category.id,
+            thread_type=thread_type,  # ← 追加したカラム（A案：question/discussion）
+        )
         db.session.add(thread)
-        db.session.commit()
+        db.session.flush()
 
         first_post = Post(
             thread_id=thread.id,
@@ -116,6 +95,6 @@ def thread_new(slug):
         db.session.add(first_post)
         db.session.commit()
 
-        return redirect(url_for("forums.thread_detail", slug=slug, thread_id=thread.id))
+        return redirect(url_for("main.thread_detail", slug=slug, thread_id=thread.id))
 
-    return render_template("forums/thread_new.html", category=category)
+    return render_template("thread/thread_new.html", category=category)

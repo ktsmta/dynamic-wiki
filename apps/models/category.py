@@ -15,8 +15,8 @@ class Category(db.Model):
     id = db.Column(
         db.String(36),
         primary_key=True,
-        default=lambda: str(uuid.uuid4()),
         nullable=False,
+        default=lambda: str(uuid.uuid4()),
     )
 
     # 簡易識別子 (半角英数字制限有)
@@ -43,16 +43,16 @@ class Category(db.Model):
     # 作成日時
     created_at = db.Column(
         db.DateTime,
-        default=lambda: datetime.now(timezone.utc),
         nullable=False,
+        default=lambda: datetime.now(timezone.utc),
     )
 
     # 更新日時
     updated_at = db.Column(
         db.DateTime,
+        nullable=False,
         default=lambda: datetime.now(timezone.utc),
         onupdate=lambda: datetime.now(timezone.utc),
-        nullable=False,
     )
 
 
