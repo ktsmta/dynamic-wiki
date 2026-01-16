@@ -20,6 +20,13 @@ class Post(db.Model):
         nullable=False,
     )
 
+    # 投稿者
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey("users.id"),
+        nullable=False,
+    )
+
     # 親ポスト
     parent_id = db.Column(
         db.String(36),
@@ -67,4 +74,10 @@ class Post(db.Model):
     thread = db.relationship(
         "Thread",
         back_populates="posts"
+    )
+
+    # usersテーブルとのリレーション
+    user = db.relationship(
+        "User",
+        back_populates="posts",
     )

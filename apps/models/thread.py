@@ -20,6 +20,13 @@ class Thread(db.Model):
         nullable=False,
     )
 
+    # 作成者
+    user_id = db.Column(
+        db.String(36),
+        db.ForeignKey("users.id"),
+        nullable=False,
+    )
+
     # タイトル
     title = db.Column(
         db.String(100),
@@ -66,4 +73,10 @@ class Thread(db.Model):
     posts = db.relationship(
         "Post",
         back_populates="thread",
+    )
+
+    # usersテーブルとのリレーション
+    user = db.relationship(
+        "User",
+        back_populates="threads",
     )

@@ -1,12 +1,17 @@
+# apps/init.py
+
 import os
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
+from flask_login import LoginManager
 
+# インスタンス化
 db = SQLAlchemy()
 migrate = Migrate()
 csrf = CSRFProtect()
+login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__, instance_relative_config=True)
@@ -24,6 +29,7 @@ def create_app():
     db.init_app(app)
     migrate.init_app(app, db)
     csrf.init_app(app)
+    login_manager.init_app(app)
     
     # モデル読み込み
     from apps.models import category, thread, post, wiki
@@ -33,13 +39,17 @@ def create_app():
     from apps.core import core_bp
     app.register_blueprint(core_bp, url_prefix='/')
 
+    # login
+    from apps.auth import auth_bp
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+
     # admin
     from apps.admin import admin_bp, init_admin
     app.register_blueprint(admin_bp, url_prefix='/admin')
 
     # main
     from apps.main import main_bp
-    app.register_blueprint(main_bp, url_prefix='/cats')
+    app.register_blueprint(main_bp, url_prefix='/c')
 
     init_admin(app)
 

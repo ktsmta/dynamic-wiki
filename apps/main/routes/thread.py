@@ -1,4 +1,5 @@
-from flask import render_template, request,redirect, url_for, abort
+from flask import render_template, request, redirect, url_for, abort
+from flask_login import login_required, current_user
 from apps.main import main_bp
 from apps.models import *
 from apps import db
@@ -24,21 +25,23 @@ def thread_all(slug):
 def thread_detail(slug, thread_id):
     thread = Thread.query.get_or_404(thread_id)
 
-    # URLのslugと、threadが所属するカテゴリslugの整合性チェック
     if thread.category.slug != slug:
         abort(404)
 
-    # 投稿処理（同じURLにPOST）
     if request.method == "POST":
+        # ★ 投稿だけログイン必須
+        if not current_user.is_authenticated:
+            return redirect(url_for("auth.login"))
+
         content = (request.form.get("content") or "").strip()
         parent_id = request.form.get("parent_id") or None
 
-        # 空投稿ガード（最低限）
         if not content:
             return redirect(url_for("main.thread_detail", slug=slug, thread_id=thread.id))
 
         post = Post(
             thread_id=thread.id,
+            user_id=current_user.id,   # ← 追加（必須）
             parent_id=parent_id,
             content=content,
         )
@@ -46,8 +49,7 @@ def thread_detail(slug, thread_id):
         db.session.commit()
 
         return redirect(url_for("main.thread_detail", slug=slug, thread_id=thread.id))
-    
-    # 表示用：時系列で取得（昇順）
+
     posts = (
         Post.query
         .filter_by(thread_id=thread.id)
@@ -63,6 +65,7 @@ def thread_detail(slug, thread_id):
 
 # スレッド新規作成
 @main_bp.route('/<slug>/threads/new', methods=["GET", "POST"])
+@login_required
 def thread_new(slug):
     category = Category.query.filter_by(slug=slug).first_or_404()
 
@@ -82,6 +85,7 @@ def thread_new(slug):
         thread = Thread(
             title=title,
             category_id=category.id,
+            user_id=current_user.id,
             thread_type=thread_type,  # ← 追加したカラム（A案：question/discussion）
         )
         db.session.add(thread)
@@ -89,6 +93,7 @@ def thread_new(slug):
 
         first_post = Post(
             thread_id=thread.id,
+            user_id=current_user.id,
             parent_id=None,
             content=content,
         )
