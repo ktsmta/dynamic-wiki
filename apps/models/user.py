@@ -33,6 +33,13 @@ class User(UserMixin, db.Model):
         index=True,
     )
 
+    # 役職
+    policy = db.Column(
+        db.String(255),
+        nullable=False,
+        default='user',
+    )
+
     # ハッシュ化済みパスワード
     password_hash = db.Column(
         db.String(255),
