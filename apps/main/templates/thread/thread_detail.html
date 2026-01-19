@@ -90,7 +90,8 @@
 
       <form method="post" class="space-y-4">
         <input type="hidden" name="parent_id" id="parent_id">
-
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        
         <textarea
           name="content"
           rows="6"
