@@ -7,10 +7,12 @@
         {% block base_head %}{% endblock %}
     </head>
     <body>
-        <div class="px-50 bg-zinc-50">
-            {% include 'base/header.html' %}
-            <div class="px-10">
-                {% block content %}{% endblock %}
+        <div class="min-h-screen flex flex-col">
+            <div class="px-100 bg-neutral-800 text-neutral-100 flex-1">
+                {% include 'base/header.html' %}
+                <div class="p-10">
+                    {% block content %}{% endblock %}
+                </div>
             </div>
             {% include 'base/footer.html' %}
         </div>
