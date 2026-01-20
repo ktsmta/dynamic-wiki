@@ -8,3 +8,4 @@ main_bp = Blueprint(
 
 from apps.main.routes import category
 from apps.main.routes import thread
+from apps.main.routes import media

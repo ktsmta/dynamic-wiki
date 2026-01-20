@@ -2,10 +2,12 @@
 <html>
     <head>
         <meta charset="UTF-8">
+        <link rel="stylesheet" href="{{ url_for('core.static', filename='css/style.css') }}">
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        {% block base_head %}{% endblock %}
     </head>
     <body>
-        <div class="px-50 bg-zinc-100">
+        <div class="px-50 bg-zinc-50">
             {% include 'base/header.html' %}
             <div class="px-10">
                 {% block content %}{% endblock %}

@@ -6,6 +6,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
+from markdown import markdown as md_to_html
+import bleach
 
 # インスタンス化
 db = SQLAlchemy()
@@ -52,5 +54,61 @@ def create_app():
     app.register_blueprint(main_bp, url_prefix='/c')
 
     init_admin(app)
+
+
+
+    # 不正なスクリプト送信防止
+    ALLOWED_TAGS = [
+        "p", "br",
+        "strong", "em", "del",
+        "blockquote",
+        "code", "pre",
+        "ul", "ol", "li",
+        "h1", "h2", "h3", "h4", "h5", "h6",
+        "a", "img",
+    ]
+
+    ALLOWED_ATTRS = {
+        "a": ["href", "title", "target", "rel"],
+        "img": ["src", "alt", "title"],
+        "code": ["class"],
+        "pre": ["class"],
+    }
+
+    ALLOWED_PROTOCOLS = ["http", "https", "mailto"]
+
+    def render_md(text: str) -> str:
+        if not text:
+            return ""
+
+        # Markdown -> HTML
+        html = md_to_html(
+            text,
+            extensions=[
+                "fenced_code",   # ```code```
+                "tables",
+                "nl2br",         # 改行を <br> に
+            ],
+            output_format="html5",
+        )
+
+        # HTML sanitize
+        cleaned = bleach.clean(
+            html,
+            tags=ALLOWED_TAGS,
+            attributes=ALLOWED_ATTRS,
+            protocols=ALLOWED_PROTOCOLS,
+            strip=True,
+        )
+
+        # linkify（URLを自動リンク化）
+        cleaned = bleach.linkify(cleaned)
+
+        return cleaned
+
+    app.jinja_env.filters["render_md"] = render_md
+
+
+
 
     return app

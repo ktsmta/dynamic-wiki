@@ -33,6 +33,54 @@ def thread_detail(slug, thread_id):
         if not current_user.is_authenticated:
             return redirect(url_for("auth.login"))
 
+        # 互換維持：content_md があれば優先、無ければ従来の content
+        raw = (request.form.get("content_md") or request.form.get("content") or "")
+        content = raw.strip()
+
+        parent_id = request.form.get("parent_id") or None
+
+        if not content:
+            return redirect(url_for("main.thread_detail", slug=slug, thread_id=thread.id))
+
+        post = Post(
+            thread_id=thread.id,
+            user_id=current_user.id,
+            parent_id=parent_id,
+            content=content,
+        )
+        db.session.add(post)
+        db.session.commit()
+
+        return redirect(url_for("main.thread_detail", slug=slug, thread_id=thread.id))
+
+    posts = (
+        Post.query
+        .filter_by(thread_id=thread.id)
+        .order_by(Post.created_at.asc())
+        .all()
+    )
+
+    return render_template(
+        "thread/thread_detail.html",
+        thread=thread,
+        posts=posts,
+    )
+
+
+""""
+# スレッド詳細
+@main_bp.route("/<slug>/threads/<thread_id>", methods=["GET", "POST"])
+def thread_detail(slug, thread_id):
+    thread = Thread.query.get_or_404(thread_id)
+
+    if thread.category.slug != slug:
+        abort(404)
+
+    if request.method == "POST":
+        # ★ 投稿だけログイン必須
+        if not current_user.is_authenticated:
+            return redirect(url_for("auth.login"))
+
         content = (request.form.get("content") or "").strip()
         parent_id = request.form.get("parent_id") or None
 
@@ -62,6 +110,7 @@ def thread_detail(slug, thread_id):
         thread=thread,
         posts=posts,
     )
+"""
 
 # スレッド新規作成
 @main_bp.route('/<slug>/threads/new', methods=["GET", "POST"])
