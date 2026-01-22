@@ -6,9 +6,10 @@
         <link rel="stylesheet" href="{{ url_for('core.static', filename='css/style.css') }}" />
         <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
         <title>
-            {% block title %}{% endblock %}
-            {% if self.title()|trim %}
-                {{ self.title()|trim }} | DYNAMICWIKI
+            {% set t %}{% block title %}{% endblock %}{% endset %}
+            {% set t = t|trim %}
+            {% if t %}
+                {{ t }} | DYNAMICWIKI
             {% else %}
                 DYNAMICWIKI
             {% endif %}
@@ -16,8 +17,8 @@
         {% block head %}{% endblock %}
     </head>
     <body>
-        <div class="min-h-screen flex flex-col">
-            <div class="bg-neutral-800 text-neutral-200 flex-1">
+        <div class="min-h-screen flex flex-col bg-neutral-800">
+            <div class="text-neutral-200 flex-1">
                 {% include 'base/header.html' %}
                 <div class="px-70 py-20">
                     {% block content %}{% endblock %}

@@ -1,4 +1,4 @@
-<div class="px-110">
+<div class="px-100">
   <div class="bg-neutral-800 text-neutral-200 border-b border-neutral-700 shadow-sm shadow-[#149414] rounded-b-2xl">
     <div class="mx-auto px-6">
       <div class="h-14 flex items-center justify-between gap-6">
@@ -10,8 +10,8 @@
         </div>
 
         <!-- Search -->
-        <div class="flex-1 max-w-sm">
-          <form action="{{ url_for('core.index') }}" method="GET">
+        <div class="flex-1 max-w-100">
+          <form action="{{ url_for('search.result') }}" method="GET">
             <div class="relative">
               <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" class="h-5 w-5">
@@ -62,7 +62,7 @@
             </div>
             <!-- Profile dropdown (no JS) -->
             <details class="relative">
-              <summary class="list-none cursor-pointer select-none inline-flex items-center gap-2 rounded-xl border border-neutral-700 bg-neutral-900/30 px-2 py-1.5 hover:bg-neutral-900/50 focus:outline-none focus:ring-2 focus:ring-[#149414]/60">
+              <summary class="list-none cursor-pointer select-none inline-flex items-center gap-2 rounded-xl border border-neutral-700 bg-neutral-900/30 px-2 py-1.5 hover:bg-neutral-900/50">
                 <!-- Avatar (fallback icon) -->
                 <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-700/60 text-neutral-200">
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" class="h-5 w-5">
@@ -88,7 +88,7 @@
                 <div class="p-2">
                   <a href="{{ url_for('core.index') }}"
                      class="block rounded-xl px-3 py-2 text-sm hover:bg-neutral-700/50">
-                    プロフィール
+                    マイページ
                   </a>
                   <a href="{{ url_for('core.index') }}"
                      class="block rounded-xl px-3 py-2 text-sm hover:bg-neutral-700/50">
@@ -109,7 +109,7 @@
             </details>
           {% else %}
             <!-- Logged out: Login button -->
-            <div class="inline-flex items-center gap-2 px-2 py-1 rounded-lg border border-[#149414]/70 text-sm text-[#149414] hover:bg-[#149414]/10">
+            <div class="inline-flex items-center gap-2 px-2 py-1 rounded-lg border border-neutral-700 text-sm text-neutral-200 bg-neutral-900/30 hover:bg-neutral-900/50">
               <a href="{{ url_for('auth.login') }}">ログイン</a>
             </div>
           {% endif %}

@@ -17,6 +17,12 @@
 ・カテゴリごと関連ニュース
 ・マイページ
 ・通知機能
-・検索
-・category_all
 ・index.html
+
+デザイン向上、index.html, category_all, category_detail, thread_all, detail, new
+
+@@@ヘッダー@@@
+    ・通知ボタンとユーザーボタンの高さそろえる
+
+@@@フッター@@@
+    ・プライバシーポリシーページ作成

@@ -53,6 +53,10 @@ def create_app():
     from apps.main import main_bp
     app.register_blueprint(main_bp, url_prefix='/c')
 
+    # search
+    from apps.search import search_bp
+    app.register_blueprint(search_bp, url_prefix='/search')
+
     init_admin(app)
 
 

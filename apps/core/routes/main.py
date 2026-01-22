@@ -12,3 +12,7 @@ def robots_txt():
 @core_bp.route('/llms.txt')
 def llms_txt():
     return core_bp.send_static_file("meta/llms.txt")
+
+@core_bp.route('/term-of-service')
+def tos():
+    return render_template('policies/tos.html')

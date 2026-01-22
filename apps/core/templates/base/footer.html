@@ -1,3 +1,27 @@
 <div>
+    <div class="px-5 flex items-center justify-between text-neutral-500 text-xs">
+        <div class="px-5 flex gap-5">
+            <a href="{{ url_for('core.tos') }}" class="underline hover:opacity-70">利用規約</a>
+            <a href="{{ url_for('core.index') }}" class="underline hover:opacity-70">プライバシーポリシー</a>
+        </div>
+
+        {#
+        <div class="flex items-center gap-5">
+            <a href="{{ url_for('core.index') }}" class="underline hover:opacity-70"></a>
+            <a href="{{ url_for('core.index') }}" class="underline hover:opacity-70">運営者情報</a>
+        </div>
+
+        <div class="flex items-center text-sm gap-3">
+            <p>👉</p>
+            <a href="https://www.example.com/" target="_blank" class="underline hover:opacity-70">X</a>
+            <a href="https://www.example.com/" target="_blank" class="underline hover:opacity-70">GitHub</a>
+            <p>👈</p>
+        </div>
+        #}
+
+        <div>
+            <p>&copy; 2026 DYNAMICWIKI, Inc.</p>
+        </div>
+    </div>
     <div class="pb-3 bg-gradient-to-b from-neutral-800 to-[#149414]"></div>
 </div>

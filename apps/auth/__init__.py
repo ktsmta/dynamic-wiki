@@ -11,7 +11,7 @@ auth_bp = Blueprint(
 )
 
 login_manager.login_view = 'auth.login'
-login_manager.login_message = 'ログインしろよカス'
+login_manager.login_message = ''
 
 @login_manager.user_loader
 def load_user(user_id: str):

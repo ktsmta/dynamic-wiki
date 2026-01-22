@@ -1,0 +1,1 @@
+cd C:\final\dynamic-wiki; venv/Scripts/activate; flask run;

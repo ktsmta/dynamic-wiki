@@ -1,0 +1,73 @@
+{% extends "base/.html" %}
+
+{% block content %}
+<div class="space-y-8">
+
+  <div>
+    <h1 class="text-3xl font-bold">検索結果</h1>
+    <p class="text-neutral-400 mt-2">キーワード: <span class="text-neutral-200">{{ q }}</span></p>
+  </div>
+
+  <div class="space-y-6">
+
+    <section>
+      <h2 class="text-xl font-semibold">カテゴリ ({{ categories|length }})</h2>
+      <ul class="mt-2 space-y-1">
+        {% for c in categories %}
+          <li>
+            <a class="hover:underline" href="{{ url_for('main.category_detail', slug=c.slug) }}">
+              {{ c.name }}
+            </a>
+          </li>
+        {% else %}
+          <li class="text-neutral-500">なし</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold">スレッド ({{ threads|length }})</h2>
+      <ul class="mt-2 space-y-1">
+        {% for t in threads %}
+          <li>
+            <a class="hover:underline" href="{{ url_for('main.thread_detail', thread_id=t.id) }}">
+              {{ t.title }}
+            </a>
+          </li>
+        {% else %}
+          <li class="text-neutral-500">なし</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold">投稿 ({{ posts|length }})</h2>
+      <ul class="mt-2 space-y-1">
+        {% for p in posts %}
+          <li class="text-neutral-200">
+            {{ p.content[:80] }}{% if p.content and p.content|length > 80 %}…{% endif %}
+          </li>
+        {% else %}
+          <li class="text-neutral-500">なし</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section>
+      <h2 class="text-xl font-semibold">Wiki ({{ wikis|length }})</h2>
+      <ul class="mt-2 space-y-1">
+        {% for w in wikis %}
+          <li>
+            <a class="hover:underline" href="{{ url_for('main.wiki_detail', slug=w.slug) }}">
+              {{ w.title }}
+            </a>
+          </li>
+        {% else %}
+          <li class="text-neutral-500">なし</li>
+        {% endfor %}
+      </ul>
+    </section>
+
+  </div>
+</div>
+{% endblock %}
