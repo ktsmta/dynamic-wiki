@@ -2,80 +2,58 @@
 {% block content %}
 <div class="min-h-[70vh] flex items-center justify-center px-4 py-12">
   <div class="w-full max-w-md">
-    <div class="bg-white/70 backdrop-blur rounded-2xl shadow-xl border border-black/5 p-8">
+    <div class="bg-zinc-900 backdrop-blur rounded-2xl shadow-xl shadow-[#149414] p-8">
       <div class="mb-6">
         <h1 class="text-3xl font-bold tracking-tight">ログイン</h1>
-        <p class="mt-2 text-sm text-black/60">メールアドレスとパスワードでログインします。</p>
       </div>
-
-      {# flash messages #}
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          <div class="space-y-3 mb-5">
-            {% for category, message in messages %}
-              <div class="rounded-xl px-4 py-3 text-sm
-                          {% if category == 'success' %} bg-emerald-50 text-emerald-900 border border-emerald-200
-                          {% else %} bg-rose-50 text-rose-900 border border-rose-200 {% endif %}">
-                {{ message }}
-              </div>
-            {% endfor %}
-          </div>
-        {% endif %}
-      {% endwith %}
 
       <form method="POST" action="{{ url_for('auth.login', next=next) }}" class="space-y-4">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" name="next" value="{{ next }}">
 
         <div>
-          <label class="block text-sm font-medium text-black/80">メールアドレス</label>
           <input
             type="email"
             name="email"
             autocomplete="email"
             required
-            placeholder="you@example.com"
-            class="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 outline-none
+            placeholder="メールアドレス"
+            class="text-black mt-2 w-full rounded-xl border border-black/10 bg-neutral-300 px-4 py-3 outline-none
                    focus:ring-2 focus:ring-black/20 focus:border-black/20"
           >
         </div>
 
         <div>
-          <label class="block text-sm font-medium text-black/80">パスワード</label>
           <input
             type="password"
             name="password"
             autocomplete="current-password"
             required
-            placeholder="••••••••"
-            class="mt-2 w-full rounded-xl border border-black/10 bg-white px-4 py-3 outline-none
+            placeholder="パスワード"
+            class="text-black w-full rounded-xl border border-black/10 bg-neutral-300 px-4 py-3 outline-none
                    focus:ring-2 focus:ring-black/20 focus:border-black/20"
           >
         </div>
 
         <button
           type="submit"
-          class="w-full rounded-xl bg-black text-white py-3 font-semibold
+          class="w-full rounded-xl bg-green-800 text-white py-3 font-semibold
                  hover:opacity-90 active:opacity-80 transition"
         >
           ログイン
         </button>
 
-        <div class="text-sm text-black/60 flex items-center justify-between">
+        <div class="text-sm text-glay-500 flex items-center justify-between">
           <span>アカウントが未作成ですか？</span>
           <a
             href="{{ url_for('auth.signup', next=next) }}"
-            class="font-semibold text-black hover:underline"
+            class="font-semibold text-glay-500 hover:underline"
           >
             サインアップ
           </a>
         </div>
       </form>
     </div>
-
-    <p class="mt-6 text-xs text-center text-black/50">
-      ログインすると、投稿やスレッド作成が可能になります。
-    </p>
   </div>
 </div>
 {% endblock %}

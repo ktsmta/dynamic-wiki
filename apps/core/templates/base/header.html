@@ -1,64 +1,120 @@
-<nav class="sticky top-0 z-50 border-b border-black/10 bg-white/70 backdrop-blur">
-  <div class="mx-auto max-w-6xl px-4 sm:px-6">
-    <div class="flex h-16 items-center justify-between">
-      <!-- Left: Brand -->
-      <div class="flex items-center gap-3">
-        <a href="{{ url_for('core.index') }}"
-           class="inline-flex items-center gap-2 rounded-xl px-3 py-2 font-semibold tracking-tight hover:bg-black/5 transition">
-          <span class="text-lg">Dynamic Wiki</span>
-        </a>
-
-        <!-- Optional: simple nav (必要なら増やしてください) -->
-        <div class="hidden md:flex items-center gap-1">
-          <a href="{{ url_for('core.index') }}"
-             class="rounded-xl px-3 py-2 text-sm text-black/70 hover:bg-black/5 hover:text-black transition">
-            ホーム
-          </a>
-          {# 例：カテゴリ一覧ページなどがあれば差し替え #}
-          {# <a href="{{ url_for('main.index') }}" class="rounded-xl px-3 py-2 text-sm text-black/70 hover:bg-black/5 hover:text-black transition">掲示板</a> #}
-        </div>
-      </div>
-
-      <!-- Right: Auth -->
-      <div class="flex items-center gap-2">
-        {% if current_user.is_authenticated %}
-          <div class="hidden sm:flex items-center gap-2">
-            <span class="text-sm text-black/60">Signed in as</span>
-            <span class="text-sm font-semibold">{{ current_user.username }}</span>
+<div class="px-110">
+  <div class="bg-neutral-800 text-neutral-200 border-b border-neutral-700 shadow-sm shadow-[#149414] rounded-b-2xl">
+    <div class="mx-auto px-6">
+      <div class="h-14 flex items-center justify-between gap-6">
+        <!-- Logo -->
+        <div>
+          <div class="text-lg tracking-tight hover:text-neutral-100">
+            <a href="{{ url_for('core.index') }}">DYNAMICWIKI</a>
           </div>
+        </div>
 
-          <form method="POST" action="{{ url_for('auth.logout') }}" class="ml-1">
-            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-            <button type="submit"
-                    class="inline-flex items-center rounded-xl border border-black/10 bg-white px-4 py-2 text-sm font-semibold
-                           hover:bg-black/5 active:bg-black/10 transition">
-              ログアウト
-            </button>
+        <!-- Search -->
+        <div class="flex-1 max-w-sm">
+          <form action="{{ url_for('core.index') }}" method="GET">
+            <div class="relative">
+              <span class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-neutral-400">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" class="h-5 w-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </span>
+
+              <input
+                type="search"
+                name="q"
+                placeholder="検索"
+                autocomplete="off"
+                class="w-full rounded-xl bg-neutral-900/60 border border-neutral-700 pl-10 pr-10 py-2 text-sm text-neutral-200 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-[#149414]/60 focus:border-[#149414]/60"
+              />
+
+              <button
+                type="submit"
+                class="absolute inset-y-0 right-0 flex items-center pr-3 text-neutral-400 hover:text-neutral-200"
+                aria-label="Search"
+              >
+                <span class="hidden sm:inline text-xs font-semibold px-2 py-1 rounded-md border border-neutral-700 bg-neutral-900/40">
+                  Enter
+                </span>
+                <span class="sm:hidden">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.3-4.3m1.8-5.2a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </span>
+              </button>
+            </div>
           </form>
-        {% else %}
-          <a href="{{ url_for('auth.login') }}"
-             class="inline-flex items-center rounded-xl px-4 py-2 text-sm font-semibold text-black/80 hover:bg-black/5 transition">
-            ログイン
-          </a>
-          <a href="{{ url_for('auth.signup') }}"
-             class="inline-flex items-center rounded-xl bg-black px-4 py-2 text-sm font-semibold text-white
-                    hover:opacity-90 active:opacity-80 transition">
-            サインアップ
-          </a>
-        {% endif %}
+        </div>
+
+        <!-- Account -->
+        <div class="flex items-center">
+          {% if current_user.is_authenticated %}
+            <div
+              class="mr-2 inline-flex items-center justify-center rounded-xl border border-neutral-700 bg-neutral-900/30 p-2 text-neutral-300 hover:bg-neutral-900/50"
+              title="通知"
+              aria-label="通知"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" class="h-5 w-5">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M14.25 17.25a2.25 2.25 0 01-4.5 0m10.5 0H3.75m16.5 0
+                    A1.5 1.5 0 0018.75 15.75V11.25a6.75 6.75 0 10-13.5 0v4.5
+                    A1.5 1.5 0 013.75 17.25" />
+              </svg>
+            </div>
+            <!-- Profile dropdown (no JS) -->
+            <details class="relative">
+              <summary class="list-none cursor-pointer select-none inline-flex items-center gap-2 rounded-xl border border-neutral-700 bg-neutral-900/30 px-2 py-1.5 hover:bg-neutral-900/50 focus:outline-none focus:ring-2 focus:ring-[#149414]/60">
+                <!-- Avatar (fallback icon) -->
+                <span class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-neutral-700/60 text-neutral-200">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" class="h-5 w-5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 20.118a7.5 7.5 0 0115 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.5-1.632z" />
+                  </svg>
+                </span>
+
+                <!-- Username (optional) -->
+                <span class="hidden lg:inline text-sm text-neutral-200">
+                  {{ current_user.username }}
+                </span>
+
+                <!-- Caret -->
+                <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true" class="size-5 text-neutral-400">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z" />
+                </svg>
+              </summary>
+
+              <!-- Dropdown panel -->
+              <div class="absolute right-0 top-full mt-2 w-56 overflow-hidden rounded-2xl border border-neutral-700 bg-neutral-800 shadow-lg">
+                <div class="p-2">
+                  <a href="{{ url_for('core.index') }}"
+                     class="block rounded-xl px-3 py-2 text-sm hover:bg-neutral-700/50">
+                    プロフィール
+                  </a>
+                  <a href="{{ url_for('core.index') }}"
+                     class="block rounded-xl px-3 py-2 text-sm hover:bg-neutral-700/50">
+                    設定
+                  </a>
+                  <div class="my-1 border-t border-neutral-700/60"></div>
+                  <form action="{{ url_for('auth.logout') }}" method="POST">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                    <button
+                      type="submit"
+                      class="w-full text-left rounded-xl px-3 py-2 text-sm hover:bg-neutral-700/50 text-neutral-200"
+                    >
+                      ログアウト
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </details>
+          {% else %}
+            <!-- Logged out: Login button -->
+            <div class="inline-flex items-center gap-2 px-2 py-1 rounded-lg border border-[#149414]/70 text-sm text-[#149414] hover:bg-[#149414]/10">
+              <a href="{{ url_for('auth.login') }}">ログイン</a>
+            </div>
+          {% endif %}
+        </div>
       </div>
     </div>
   </div>
-</nav>
-
-
-{#
-<div>
-    <div class="text-6xl">
-        <h1><a href="{{ url_for('core.index') }}" class="underline">header</a></h1>
-        <div class="py-10">
-            <div class="border"></div>
-        </div>
-    </div>
-</div>    
-#}
+</div>

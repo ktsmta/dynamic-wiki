@@ -1,21 +1,159 @@
+{# apps/main/templates/category/category_all.html #}
 {% extends 'base/.html' %}
 
+{# ===== 1) 子カテゴリ（孫以降も同じ表示） ===== #}
+{% macro render_children_list(children) %}
+  <div class="space-y-1">
+    {% for child in children %}
+      <div class="flex items-start gap-3">
+        <div class="pt-0.5 select-none text-neutral-500">・</div>
+        <div class="min-w-0 flex-1">
+          <a
+            href="{{ url_for('main.category_detail', slug=child.slug) }}"
+            class="block rounded-lg px-3 py-1.5 hover:bg-neutral-800/60 transition
+                   focus:outline-none focus:ring-2 focus:ring-[#149414]/60"
+          >
+            <span class="text-neutral-100 break-words">{{ child.name }}</span>
+          </a>
+        </div>
+
+        {% if child.children and (child.children|length > 0) %}
+          {# 孫も展開したい場合：同じトグルボタン #}
+          <button
+            type="button"
+            class="shrink-0 rounded-lg px-2 py-1.5 text-neutral-300 hover:bg-neutral-800/60 transition
+                   focus:outline-none focus:ring-2 focus:ring-[#149414]/60"
+            data-toggle="children-{{ child.id }}"
+            aria-controls="children-{{ child.id }}"
+            aria-expanded="false"
+            aria-label="toggle children"
+          >
+            <span class="inline-flex items-center gap-2">
+              <span class="text-neutral-600">›</span>
+              <svg
+                class="h-4 w-4 text-neutral-400 transition-transform duration-200"
+                data-chevron="children-{{ child.id }}"
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+              >
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 0 1 .02-1.06L10.94 10 7.23 6.29a.75.75 0 1 1 1.06-1.06l4.24 4.24c.29.29.29.77 0 1.06l-4.24 4.24a.75.75 0 0 1-1.06.02z" clip-rule="evenodd"/>
+              </svg>
+            </span>
+          </button>
+        {% endif %}
+      </div>
+
+      {% if child.children and (child.children|length > 0) %}
+        <div id="children-{{ child.id }}" class="hidden ml-6 mt-1 border-l border-neutral-800 pl-4">
+          {{ render_children_list(child.children) }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endmacro %}
+
+{# ===== 2) 兄弟カテゴリを横並びで表示する「タイル」 ===== #}
+{% macro render_sibling_row(children) %}
+  <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+    {% for node in children %}
+      {% set has_children = node.children and (node.children|length > 0) %}
+      {% set panel_id = "children-" ~ node.id %}
+
+      <div class="inline-flex items-center gap-2">
+        <span class="select-none text-neutral-500">・</span>
+
+        <a
+          href="{{ url_for('main.category_detail', slug=node.slug) }}"
+          class="rounded-lg px-2 py-1.5 hover:bg-neutral-800/60 transition
+                 focus:outline-none focus:ring-2 focus:ring-[#149414]/60"
+        >
+          <span class="text-neutral-100 break-words">{{ node.name }}</span>
+        </a>
+
+        {% if has_children %}
+          <button
+            type="button"
+            class="rounded-lg px-2 py-1.5 text-neutral-300 hover:bg-neutral-800/60 transition
+                   focus:outline-none focus:ring-2 focus:ring-[#149414]/60"
+            data-toggle="{{ panel_id }}"
+            aria-controls="{{ panel_id }}"
+            aria-expanded="false"
+            aria-label="toggle children"
+          >
+            <span class="inline-flex items-center">
+              <svg
+                class="h-4 w-4 text-neutral-400 transition-transform duration-200"
+                data-chevron="{{ panel_id }}"
+                viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"
+              >
+                <path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 0 1 .02-1.06L10.94 10 7.23 6.29a.75.75 0 1 1 1.06-1.06l4.24 4.24c.29.29.29.77 0 1.06l-4.24 4.24a.75.75 0 0 1-1.06.02z" clip-rule="evenodd"/>
+              </svg>
+            </span>
+          </button>
+        {% endif %}
+      </div>
+
+      {# 展開領域は「行全体幅」を使って下段に落とす #}
+      {% if has_children %}
+        <div id="{{ panel_id }}" class="hidden w-full mt-2 ml-4 border-l border-neutral-800 pl-4">
+          {{ render_children_list(node.children) }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endmacro %}
+
 {% block content %}
-<div>
-    <div class="text-4xl">
-        <p>すべてのカテゴリ</p>
+<div class="space-y-8">
+  <div class="flex items-end justify-between gap-6">
+    <div class="min-w-0">
+      <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-100">
+        すべてのカテゴリ
+      </h1>
     </div>
-    <div class="grid grid-cols-3 gap-6 mt-6">
-        {% for category in categories %}
-            <a href="{{ url_for('main.category_detail', slug=category.slug) }}" class="block p-6 bg-white rounded shadow hover:bg-gray-50">
-                <h2 class="text-2xl">
-                    {{ category.name }}
-                </h2>
-                <p class="text-sm text-gray-500 mt-2">
-                    /{{ category.slug }}
-                </p>
+  </div>
+
+  <div class="grid gap-6">
+    {% for c in categories %}
+      <div class="rounded-2xl border border-neutral-800 bg-neutral-900/40 shadow-sm">
+        <div class="px-5 py-4 border-b border-neutral-800">
+          <h2 class="text-2xl md:text-3xl font-bold tracking-tight">
+            <a
+              href="{{ url_for('main.category_detail', slug=c.slug) }}"
+              class="hover:underline text-neutral-100"
+            >
+              {{ c.name }}
             </a>
-        {% endfor %}
-    </div>
+          </h2>
+        </div>
+
+        <div class="px-5 py-4">
+          {% if c.children and (c.children|length > 0) %}
+            {{ render_sibling_row(c.children) }}
+          {% else %}
+            <div class="text-sm text-neutral-500">子カテゴリはまだありません。</div>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 </div>
+
+<script>
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-toggle]");
+    if (!btn) return;
+
+    const id = btn.getAttribute("data-toggle");
+    const panel = document.getElementById(id);
+    if (!panel) return;
+
+    const willOpen = panel.classList.contains("hidden");
+    panel.classList.toggle("hidden");
+
+    btn.setAttribute("aria-expanded", String(willOpen));
+
+    const chevron = document.querySelector(`[data-chevron="${id}"]`);
+    if (chevron) chevron.classList.toggle("rotate-90", willOpen);
+  });
+</script>
 {% endblock %}

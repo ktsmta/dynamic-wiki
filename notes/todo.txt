@@ -10,3 +10,13 @@
     localhost:5000/forums/zta👉forums/security/ztaに変更
 ・categories.allのページに親なしだけでなくすべてのカテゴリをわかりやすく表示
 ・index.htmlに検索バーと通知機能(回答あり、返信あり等)
+
+---
+
+・AI要約
+・カテゴリごと関連ニュース
+・マイページ
+・通知機能
+・検索
+・category_all
+・index.html

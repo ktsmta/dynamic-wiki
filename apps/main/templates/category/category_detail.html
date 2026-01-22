@@ -1,112 +1,243 @@
+{# apps/main/templates/category/category_detail.html #}
 {% extends "base/.html" %}
 
 {% block content %}
-    <div>
-        <div>
-            <div>
-                <!-- パンくずリスト -->
-                <div class="text-xl pb-10">
-                    {% if parent %}
-                        <div class="flex flex-wrap items-center gap-x-2">
-                            <p class="inline m-0">
-                                <a href="{{ url_for('main.category_all') }}" class="underline">
-                                    すべて
-                                </a>
-                                >
-                            </p>
-                            <p class="inline m-0">
-                                <a href="{{ url_for('main.category_detail', slug=parent.slug) }}" class="underline">
-                                    {{ parent.name }}
-                                </a>
-                                > {{ category.name }}
-                            </p>
-                        </div>
+<div class="space-y-8">
+    <!-- タイトル -->
+    <div class="flex items-end justify-between gap-6">
+        <div class="min-w-0">
+            <h1 class="text-5xl font-extrabold tracking-tight break-words">
+                {{ category.name }}
+            </h1>
+
+            <!-- パンくず（必要なら） -->
+            <div class="mt-3 text-sm text-neutral-400">
+                <a href="{{ url_for('main.category_all') }}" class="hover:underline">すべて</a>
+
+                {% for c in crumbs %}
+                    <span class="mx-2 text-neutral-600">/</span>
+
+                    {% if loop.last %}
+                        <span class="text-neutral-300">{{ c.name }}</span>
                     {% else %}
-                        <div class="flex flex-wrap items-center gap-x-2">
-                            <p class="inline m-0">
-                                <a href="{{ url_for('main.category_all') }}" class="underline">
-                                    すべて
-                                </a>
-                            </p>
-                            <p>
-                                > {{ category.name }}
-                            </p>
-                        </div>
+                        <a href="{{ url_for('main.category_detail', slug=c.slug) }}" class="hover:underline">
+                            {{ c.name }}
+                        </a>
                     {% endif %}
-                </div>
+                {% endfor %}
+            </div>
+        </div>
 
-                <!-- 子カテゴリ -->
-                <div>
-                    {% if children %}
-                        <div class="pb-10">
-                            <div class="text-4xl">
-                                <p>関連カテゴリ</p>
+        <!-- 右上に小さな補助情報（任意） -->
+        <div class="hidden md:flex items-center gap-2 text-xs text-neutral-400">
+            {% if children and children|length > 0 %}
+                <span class="px-3 py-1 rounded-full border border-neutral-700 bg-neutral-900/40">
+                    サブカテゴリ {{ children|length }}
+                </span>
+            {% endif %}
+            <div class="mt-4">
+                <a href="{{ url_for('main.thread_new', slug=category.slug) }}"
+                    class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#149414] text-neutral-950 font-bold hover:opacity-90 text-lg">
+                    作成
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- メイン 2カラム（左6 : 右4） -->
+    <div class="grid grid-cols-1 lg:grid-cols-10 gap-6">
+        <!-- 左：Wiki（6割） -->
+        <section class="lg:col-span-6">
+            <div class="space-y-6">
+                
+
+                <!-- Wiki本体 -->
+                <div class="rounded-2xl border border-neutral-700 bg-neutral-900/40 shadow-sm shadow-[#149414]/20 overflow-hidden">
+                    <div class="flex items-center justify-between gap-4 px-5 py-4 border-b border-neutral-700 bg-neutral-900/60">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="h-8 w-8 rounded-xl bg-[#149414]/20 border border-[#149414]/30 flex items-center justify-center">
+                                <span class="text-[#149414] text-sm font-bold">W</span>
                             </div>
-                            <div class="grid grid-cols-3 gap-6 mt-6">
-                                {% for child in children %}
-                                    <a href="{{ url_for('main.category_detail', slug=child.slug) }}" class="block p-6 bg-white rounded shadow hover:bg-gray-50">
-                                        <h2 class="text-2xl">
-                                            {{ child.name }}
-                                        </h2>
-                                        <p class="text-sm text-gray-500 mt-2">
-                                            /{{ child.slug }}
-                                        </p>
-                                    </a>
-                                {% endfor %}
-                            </div>
+                            <h2 class="text-lg font-bold text-neutral-100 truncate">Wiki</h2>
+                            <span class="text-xs text-neutral-400 truncate">
+                                {{ category.slug }}
+                            </span>
                         </div>
-                    {% endif %}
-                </div>
 
-                <!-- スレッド新着5件 -->
-                <div>
-                    <div class="text-4xl">
-                        <p>最近</p>
+                        <!-- 将来：編集/履歴/サマリ更新など -->
+                        <div class="flex items-center gap-2">
+                            <button type="button"
+                                class="px-3 py-1.5 text-xs rounded-xl border border-neutral-700 bg-neutral-950/40 hover:bg-neutral-950/70">
+                                目次
+                            </button>
+                            <button type="button"
+                                class="px-3 py-1.5 text-xs rounded-xl border border-neutral-700 bg-neutral-950/40 hover:bg-neutral-950/70">
+                                履歴
+                            </button>
+                        </div>
                     </div>
-                    <div class="mt-4">
-                        {% if latest_threads %}
-                            <ul class="mt-4 space-y-3">
-                                {% for thread in latest_threads %}
-                                    <li class="group flex items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white px-5 py-4 shadow-sm hover:shadow transition">
-                                        <a
-                                            href="{{ url_for('main.thread_detail', slug=category.slug, thread_id=thread.id) }}"
-                                            class="min-w-0 flex-1 text-lg font-medium text-gray-900 underline-offset-4 group-hover:underline group-hover:text-gray-700 transition"
-                                        >
-                                            <span class="block truncate">{{ thread.title }}</span>
+
+                    <!-- Wiki本文 -->
+                    <div class="p-6">
+                        {% if wiki and wiki.content %}
+                            <article class="prose prose-invert max-w-none">
+                                {{ wiki.content | safe }}
+                            </article>
+                        {% else %}
+                            <div class="rounded-2xl border border-dashed border-neutral-700 bg-neutral-950/30 p-6">
+                                <p class="text-neutral-300 font-semibold mb-2">このカテゴリのWikiはまだありません</p>
+                                <p class="text-neutral-400 text-sm leading-relaxed">
+                                    右側の「質問」や「議論」から集まった知見を、AIで要約してここに反映するイメージです。
+                                </p>
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    <a href="#"
+                                       class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#149414] text-neutral-950 font-bold hover:opacity-90">
+                                        Wikiを作成
+                                    </a>
+                                    <a href="#"
+                                       class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-700 bg-neutral-950/40 hover:bg-neutral-950/70">
+                                        既存スレッドから生成
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <!-- ✅ サブカテゴリ（Wikiの上部に移動） -->
+                {% if children and children|length > 0 %}
+                    <div class="rounded-2xl border border-neutral-700 bg-neutral-900/30 p-6">
+                        <div class="flex items-center justify-between gap-4">
+                            <h3 class="text-lg font-bold text-neutral-100">サブカテゴリ</h3>
+                            <span class="text-xs text-neutral-400">
+                                {{ children|length }} items
+                            </span>
+                        </div>
+
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            {% for child in children %}
+                                <a href="{{ url_for('main.category_detail', slug=child.slug) }}"
+                                   class="px-4 py-2 rounded-xl border border-neutral-700 bg-neutral-950/30 hover:bg-neutral-950/60 transition">
+                                    {{ child.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <!-- 右：上=質問 / 下=議論（4割） -->
+        <aside class="lg:col-span-4">
+            <div class="grid grid-rows-1 lg:grid-rows-2 gap-6 h-full">
+                <!-- 右上：質問 -->
+                <div class="rounded-2xl border border-neutral-700 bg-neutral-900/40 shadow-sm shadow-[#149414]/15 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-neutral-700 bg-neutral-900/60 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="h-8 w-8 rounded-xl bg-[#149414]/20 border border-[#149414]/30 flex items-center justify-center">
+                                <span class="text-[#149414] text-sm font-bold">Q</span>
+                            </div>
+                            <h2 class="text-lg font-bold text-neutral-100 truncate">質問</h2>
+                        </div>
+
+                        <a href="{{ url_for('main.category_detail', slug=category.slug) }}"
+                           class="text-xs text-neutral-300 hover:text-white hover:underline">
+                            更新
+                        </a>
+                    </div>
+
+                    <div class="p-5">
+                        {% if latest_threads and latest_threads|length > 0 %}
+                            <ul class="space-y-3">
+                                {% for t in latest_threads %}
+                                    <li>
+                                        <a href="{{ url_for('main.thread_detail', thread_id=t.id) if false else '#' }}"
+                                           class="block rounded-2xl border border-neutral-700 bg-neutral-950/30 hover:bg-neutral-950/60 p-4 transition">
+                                            <div class="flex items-start justify-between gap-4">
+                                                <p class="font-semibold text-neutral-100 leading-snug break-words">
+                                                    {{ t.title if t.title is defined else "（タイトル未設定）" }}
+                                                </p>
+                                                <span class="shrink-0 text-[11px] text-neutral-500">
+                                                    {% if t.created_at %}{{ t.created_at.strftime("%Y-%m-%d") }}{% endif %}
+                                                </span>
+                                            </div>
+                                            <p class="mt-2 text-sm text-neutral-400 line-clamp-2">
+                                                {{ t.body if t.body is defined else "クリックして詳細へ（導線は後で繋ぎ込み）" }}
+                                            </p>
                                         </a>
-                                        <span class="shrink-0 text-sm text-gray-500">
-                                            {{ thread.created_at.strftime('%Y-%m-%d %H:%M') }}
-                                        </span>
                                     </li>
                                 {% endfor %}
                             </ul>
                         {% else %}
-                            <p class="mt-4 text-gray-600">まだスレッドはありません。</p>
+                            <div class="rounded-2xl border border-dashed border-neutral-700 bg-neutral-950/30 p-5">
+                                <p class="text-neutral-300 font-semibold">まだ質問がありません</p>
+                                <p class="text-neutral-400 text-sm mt-2">
+                                    まずは疑問を1つ投げて、右下の議論を育てるところから始めましょう。
+                                </p>
+                                <div class="mt-4">
+                                    <a href="{{ url_for('main.thread_new', slug=category.slug) }}"
+                                       class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#149414] text-neutral-950 font-bold hover:opacity-90">
+                                        作成
+                                    </a>
+                                </div>
+                            </div>
                         {% endif %}
-                    </div>
-                    <div class="mt-6">
-                        <p class="flex justify-center">
-                            <a
-                                href="{{ url_for('main.thread_all', slug=category.slug) }}"
-                                class="inline-flex items-center justify-center rounded-xl border border-gray-300 bg-white px-5 py-3 text-base font-semibold text-gray-900 shadow-sm hover:bg-gray-50 active:scale-[0.99] transition"
-                            >
-                                すべてのスレッドを見る
-                            </a>
-                        </p>
-                        <p class="mt-3 flex justify-center">
-                            <a
-                                href="{{ url_for('main.thread_new', slug=category.slug) }}"
-                                class="inline-flex items-center justify-center rounded-xl bg-gray-900 px-5 py-3 text-base font-semibold text-white shadow-sm hover:bg-gray-800 active:scale-[0.99] transition"
-                            >
-                                新しいスレッドを作成
-                            </a>
-                        </p>
                     </div>
                 </div>
 
-                <!-- 動的wiki -->
-                <div></div>
+                <!-- 右下：議論 -->
+                <div class="rounded-2xl border border-neutral-700 bg-neutral-900/40 shadow-sm shadow-[#149414]/15 overflow-hidden">
+                    <div class="px-5 py-4 border-b border-neutral-700 bg-neutral-900/60 flex items-center justify-between gap-4">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="h-8 w-8 rounded-xl bg-[#149414]/20 border border-[#149414]/30 flex items-center justify-center">
+                                <span class="text-[#149414] text-sm font-bold">D</span>
+                            </div>
+                            <h2 class="text-lg font-bold text-neutral-100 truncate">議論</h2>
+                        </div>
+
+                        <div class="flex items-center gap-2">
+                            <button type="button"
+                                class="px-3 py-1.5 text-xs rounded-xl border border-neutral-700 bg-neutral-950/40 hover:bg-neutral-950/70">
+                                並び替え
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-5">
+                        <!-- 現段階は“複数ウィンドウ感”優先で器を作る -->
+                        <div class="space-y-3">
+                            <div class="rounded-2xl border border-neutral-700 bg-neutral-950/30 p-4">
+                                <div class="flex items-start justify-between gap-4">
+                                    <p class="font-semibold text-neutral-100">議論スレッドをここに表示</p>
+                                    <span class="text-[11px] text-neutral-500">preview</span>
+                                </div>
+                                <p class="mt-2 text-sm text-neutral-400 leading-relaxed">
+                                    将来的には「右上の質問でスレッドを選択 → そのスレッドの投稿(Post)をここに時系列表示」
+                                    の形にすると、wikiと議論が“同時に見える”体験になります。
+                                </p>
+                            </div>
+
+                            <div class="rounded-2xl border border-dashed border-neutral-700 bg-neutral-950/20 p-4">
+                                <p class="text-sm text-neutral-400">
+                                    TODO: threads/posts の関連を使って「最新投稿」「ホット」「未解決」などのタブを追加
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 flex flex-wrap gap-2">
+                            <a href="#"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-700 bg-neutral-950/40 hover:bg-neutral-950/70">
+                                議論を始める
+                            </a>
+                            <a href="#"
+                               class="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-neutral-700 bg-neutral-950/40 hover:bg-neutral-950/70">
+                                まとめをWikiへ反映
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
+        </aside>
     </div>
+</div>
 {% endblock %}
