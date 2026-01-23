@@ -13,6 +13,6 @@ def robots_txt():
 def llms_txt():
     return core_bp.send_static_file("meta/llms.txt")
 
-@core_bp.route('/term-of-service')
+@core_bp.route('/terms-of-service')
 def tos():
     return render_template('policies/tos.html')
