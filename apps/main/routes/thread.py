@@ -5,7 +5,7 @@ from apps.models import *
 from apps import db
 
 # スレッド一覧
-@main_bp.route("/<slug>/threads")
+@main_bp.route("/<slug>/thread/all")
 def thread_all(slug):
     category = Category.query.filter_by(slug=slug).first_or_404()
     threads = (
@@ -21,7 +21,7 @@ def thread_all(slug):
     )
 
 # スレッド詳細
-@main_bp.route("/<slug>/threads/<thread_id>", methods=["GET", "POST"])
+@main_bp.route("/<slug>/thread/<thread_id>", methods=["GET", "POST"])
 def thread_detail(slug, thread_id):
     thread = Thread.query.get_or_404(thread_id)
 
@@ -113,7 +113,7 @@ def thread_detail(slug, thread_id):
 """
 
 # スレッド新規作成
-@main_bp.route('/<slug>/threads/new', methods=["GET", "POST"])
+@main_bp.route('/<slug>/thread/new', methods=["GET", "POST"])
 @login_required
 def thread_new(slug):
     category = Category.query.filter_by(slug=slug).first_or_404()

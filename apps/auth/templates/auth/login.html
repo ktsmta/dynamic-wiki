@@ -2,9 +2,9 @@
 {% block content %}
 <div class="min-h-[70vh] flex items-center justify-center px-4 py-12">
   <div class="w-full max-w-md">
-    <div class="bg-zinc-900 backdrop-blur rounded-2xl shadow-xl shadow-[#149414] p-8">
+    <div class="bg-neutral-900/50 rounded-2xl shadow-[0_0_2rem_0.5rem_rgba(20,148,20,1)] p-8">
       <div class="mb-6">
-        <h1 class="text-3xl font-bold tracking-tight">ログイン</h1>
+        <h1 class="text-3xl text-center font-bold tracking-tight">ログイン</h1>
       </div>
 
       <form method="POST" action="{{ url_for('auth.login', next=next) }}" class="space-y-4">
@@ -42,15 +42,19 @@
         >
           ログイン
         </button>
-
-        <div class="text-sm text-glay-500 flex items-center justify-between">
-          <span>アカウントが未作成ですか？</span>
-          <a
-            href="{{ url_for('auth.signup', next=next) }}"
-            class="font-semibold text-glay-500 hover:underline"
-          >
-            サインアップ
-          </a>
+        
+        <div class="flex flex-col pt-1 text-xs">
+          <div class="text-right text-xs">
+            <p>初めてですか？</p>
+          </div>
+          <div class="text-glay-500 text-right">
+            <a
+              href="{{ url_for('auth.signup', next=next) }}"
+              class="font-semibold text-glay-500 underline text-sm"
+            >
+              サインアップ
+            </a>
+          </div>
         </div>
       </form>
     </div>

@@ -1,7 +1,7 @@
 # apps/init.py
 
 import os
-from flask import Flask
+from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_wtf.csrf import CSRFProtect
@@ -39,7 +39,7 @@ def create_app():
     # Blueprint登録
     # core
     from apps.core import core_bp
-    app.register_blueprint(core_bp, url_prefix='/')
+    app.register_blueprint(core_bp,)
 
     # login
     from apps.auth import auth_bp
@@ -48,16 +48,19 @@ def create_app():
     # admin
     from apps.admin import admin_bp, init_admin
     app.register_blueprint(admin_bp, url_prefix='/admin')
+    init_admin(app)
 
     # main
     from apps.main import main_bp
-    app.register_blueprint(main_bp, url_prefix='/c')
+    app.register_blueprint(main_bp, url_prefix='/wiki')
 
     # search
     from apps.search import search_bp
-    app.register_blueprint(search_bp, url_prefix='/search')
+    app.register_blueprint(search_bp)
 
-    init_admin(app)
+    # account
+    from apps.account import account_bp
+    app.register_blueprint(account_bp)
 
 
 
@@ -112,7 +115,8 @@ def create_app():
 
     app.jinja_env.filters["render_md"] = render_md
 
-
-
+    @app.errorhandler(404)
+    def not_found(e):
+        return render_template('errors/404.html'), 404
 
     return app

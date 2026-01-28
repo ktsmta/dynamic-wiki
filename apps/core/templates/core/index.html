@@ -1,9 +1,31 @@
-{% extends 'base/.html' %}
-
-{% block content %}
-    <div class="text-2xl flex justify-center">
-        <p>トップページ準備中です。詳細は</p>
-        <a href="{{ url_for('main.category_all') }}" class="text-blue-700 underline">こちら</a>
-        <p>をクリック</p>
-    </div>
-{% endblock %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" href="{{ url_for('core.static', filename='css/style.css') }}" />
+        <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+        <title>名称未定</title>
+    </head>
+    <body>
+        <div class="bg-neutral-800 text-neutral-200">
+            {% include 'base/header.html' %}
+            <div class="relative h-screen -mt-14">
+                {# 背景画像 #}
+                <div class="absolute inset-0 z-0 bg-[url('{{ url_for('core.static', filename='img/background.png') }}')] bg-cover bg-center"></div>
+                {# 暗幕 #}
+                <div class="absolute inset-0 z-0 bg-black/60"></div>
+                {# グラデーション #}
+                <div class="absolute inset-x-0 z-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-neutral-800"></div>
+                {# 画像上のコンテンツ #}
+                <div class="relative z-10 h-full">
+                    <div class="mx-auto h-full flex items-center">
+                        <div>
+                            <h1 class="text-5xl font-bold tracking-tight">議論が、知識になる。</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

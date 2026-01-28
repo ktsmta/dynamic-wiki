@@ -1,5 +1,10 @@
-{# apps/main/templates/category/category_all.html #}
 {% extends 'base/.html' %}
+
+{% block title %}
+すべてのカテゴリ
+{% endblock %}
+
+
 
 {# ===== 1) 子カテゴリ（孫以降も同じ表示） ===== #}
 {% macro render_children_list(children) %}

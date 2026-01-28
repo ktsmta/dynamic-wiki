@@ -8,7 +8,7 @@ from apps.models.thread import Thread
 from apps.models.post import Post
 
 
-@search_bp.get("/")
+@search_bp.get("/search")
 def result():
     q = (request.args.get("q") or "").strip()
     if not q:

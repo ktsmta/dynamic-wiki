@@ -16,3 +16,7 @@ def llms_txt():
 @core_bp.route('/terms-of-service')
 def tos():
     return render_template('policies/tos.html')
+
+@core_bp.route('/privacy-policy')
+def pp():
+    return render_template('policies/pp.html')
